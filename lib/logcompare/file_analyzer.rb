@@ -52,8 +52,8 @@ module Logcompare
     end
 
     def parse_line(line)
+      @count += 1
       line.scan(@option[:token]).each do |w|  
-        @count += 1
         next if unwanted(w)
         w.gsub!(@option[:same], '_' ) 
         @freq[w] += 1

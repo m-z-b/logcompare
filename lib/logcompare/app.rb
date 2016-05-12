@@ -64,6 +64,10 @@ module Logcompare
           @option[:ignore] << /^[a-fA-F0-9]+$/
         end
 
+        opt.on '--ignore0xhex', 'ignore tokens which look like 0x9898af3...' do |opt|
+          @option[:ignore] << /^0[xX][a-fA-F0-9]+$/
+        end
+
         opt.on '--ignorehex-', 'ignore tokens consisting entirely of hex characters and - ' do |opt|
           @option[:ignore] << /^[a-fA-F0-9\-]+$/
         end

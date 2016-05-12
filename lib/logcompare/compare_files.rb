@@ -25,7 +25,7 @@ module Logcompare
           uniques = []
           analysis.tokens.each do |tok|
             if @sum[tok] == analysis.token_freq(tok)
-              uniques << [analysis.first(tok), line, analysis.token_freq(tok) ]
+              uniques << [analysis.first(tok), tok, analysis.token_freq(tok) ]
             end
           end
           report_unqiues( analysis.name, uniques ) if uniques.count > 0
@@ -43,7 +43,7 @@ module Logcompare
         puts "Only in #{name}"
         puts "-" * 40
         uniques.sort.each do |line,token,frequency| 
-          printf( "%8d: %s (%d)", line, token, frequency )
+          printf( "%8d: %s (%d)\n", line, token, frequency )
         end
         puts
       end
