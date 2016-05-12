@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby 
+
+require "logcompare"
+
+# Run the real application
+Logcompare::App.new.go(ARGV)
+
+
