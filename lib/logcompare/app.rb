@@ -1,12 +1,14 @@
 
 module Logcompare
 
-
+  require 'logcompare/file_analyzer'
   require 'optparse'
 
   class App
     def initialize
       @option = { ignore: [] }
+      @option[:token] = /[[:alnum:]]+(?:[-.][[:alnum]]+)*/
+      @option[:same] = /[0-9]/
       @files = []
       @analyses = []
     end
@@ -14,14 +16,26 @@ module Logcompare
     def go(argv)
       begin
         parse_options( argv )
+        print_info
         @files.each do |filename|
           @analyses  << FileAnalyzer.analyze( filename, @option )
         end
+        CompareFiles.new(@option).compare( @analyses )
       rescue Interrupt
         "Ctrl-C pressed. Exit left pursued by a bear."
       end
     end
 
+    def print_info
+      puts "Logcompare V#{VERSION}"
+      puts "Tokens: #{@option[:token]}"
+      puts "Same: #{@option[:same]}"
+      unless @option[:ignore].empty?
+        @option[:ignore].each do |regexp|
+          puts "Ignoring: #{regexp.to_s}"
+        end
+      end
+    end
 
 
   private
@@ -46,22 +60,46 @@ module Logcompare
           end
         end
 
+        opt.on '--ignorehex', 'ignore tokens consisting entirely or hex characters' do |opt|
+          @option[:ignore] << /^[a-fA-F0-9]+$/
+        end
+
+        opt.on '--ignorehex-', 'ignore tokens consisting entirely of hex characters and - ' do |opt|
+          @option[:ignore] << /^[a-fA-F0-9\-]+$/
+        end
+
         opt.on '--nodefaults', 'Do not ignore default patterns' do |opt|
-          @option[:noignore] = true
+          @option[:nodefault] = true
+        end
+
+        opt.on '--token REGEX', 'specify a regular expresssion for tokenizing input' do |opt|
+          begin
+            @option[:token] = Regexp.new(opt)
+          rescue StandardError => e
+            puts e.message
+            exit 1
+          end
+        end
+
+        opt.on '--same REGEX', 'treat all matches to REGEX as equivalent' do |opt|
+          begin
+            @option[:same] = Regexp.new(opt)
+          rescue StandardError => e
+            puts e.message
+            exit 1
+          end
         end
 
 
       end
 
-      unless @option[:noignore] 
+      parser.parse!(args)
+
+      unless @option[:nodefault] 
         # Ignore anything that looks like a number
-        @option[:ignore] << "\d+"
+        @option[:ignore] << Regexp.new("^\\d+$")
       end
 
-      # Add in more ignore strings according to optiosn
-
-
-      parser.parse!(args)
       @files = args
 
       if @files.count < 2
