@@ -4,13 +4,13 @@ Command line gem to compare a set of log files which are presumed to cover simil
 
 ## Installation
 
-Currentlythe gem is not on [rubygems](http://rubygems.org/)
+Currently the gem is not on [rubygems](http://rubygems.org/)
 
 
 If you have the [specific_install](https://rubygems.org/gems/specific_install/versions/0.3.1) gem installed, you can install it directly from a git repository:
 
     $ gem specific_install -l https://Mike_Bell@bitbucket.org/Mike_Bell/ea2-logcompare.git
-    $ gem install logcompare
+
 
 ## Usage
 
@@ -20,7 +20,11 @@ If you have the [specific_install](https://rubygems.org/gems/specific_install/ve
 
 Most of the logfiles should represent "normal" operations. The log files will be analyzed and any "interesting" lines which differ significantly from other log files will be printed out. 
 
-Interestingness is determined by the lexical tokens in the file. What constitutes a token, how it should be normalized, and what tokens should be ignored are controlled by additional options to the program. 
+Compressed log files (with names ending in '.gz') do not need to be decompressed prior to analysis.
+
+## Interestingness
+
+Interestingness is determined by analysis of the lexical tokens in the file. What constitutes a token, how it should be normalized, and what tokens should be ignored are controlled by additional options to the program. 
 
 ## Development
 
