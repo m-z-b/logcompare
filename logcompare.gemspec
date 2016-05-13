@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.summary       = %q{Compare a set of log files looking for anomalies}
   spec.description   = %q{Compare a set of log files looking for anomolies}
   spec.homepage      = "TODO: Put your gem's website or public repo URL here."
-  sepc.licenses      = "MIT"
+  spec.licenses      = "MIT"
 
 
 
