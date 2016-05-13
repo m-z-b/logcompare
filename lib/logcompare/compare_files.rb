@@ -33,20 +33,6 @@ module Logcompare
       end
 
 
-
-
-
-      def report_unqiues( name, uniques )
-        puts
-        puts "Only in #{name}"
-        puts "-" * 40
-        uniques.sort.each do |line,token,frequency| 
-          printf( "%8d: %s (%d)\n", line, token, frequency )
-        end
-        puts
-      end
-
-
     end
 
 
