@@ -27,7 +27,7 @@ module Logcompare
     end
 
     def print_info
-      puts "Logcompare V#{VERSION}"
+      puts "Mike's Logcompare V#{VERSION}"
       puts "Tokens: #{@option[:token]}"
       puts "Same: #{@option[:same]}"
       unless @option[:ignore].empty?
@@ -92,6 +92,10 @@ module Logcompare
             puts e.message
             exit 1
           end
+        end
+
+        opt.on '--uniques', 'show list of unique tokens in each file' do |opt|
+          @option[:uniques] = true
         end
 
 
