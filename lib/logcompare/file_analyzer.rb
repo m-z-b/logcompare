@@ -20,6 +20,7 @@ module Logcompare
       @tokens = 0
       @freq = Hash.new{ |h,k| h[k] = 0 }  # How many occurrences
       @first = Hash.new                    # Last line seen 
+      @uniques = []
     end
 
     def parse( filename )
@@ -29,14 +30,9 @@ module Logcompare
         start = Time.now
 
         f = File.open(filename,  encoding: 'iso-8859-1')
-        if filename.end_with?( '.gz')
-          Zlib::GzipReader.new(f).each_line do |line|
-            parse_line(line)
-          end
-        else
-          f.each_line do |line|
-            parse_line(line)
-          end
+        f = Zlib::GzipReader.new(f) if filename.end_with?('.gz')
+        f.each_line do |line|
+          parse_line(line)
         end
         f.close
 
@@ -51,25 +47,63 @@ module Logcompare
       end
     end
 
-    def parse_line(line)
-      @count += 1
-      line.scan(@option[:token]).each do |w|  
-        next if unwanted(w)
-        w.gsub!(@option[:same], '_' ) 
-        @freq[w] += 1
-        @first[w] = @count unless @first.has_key?(w)
-        @tokens += 1
+
+    def find_uniques( sum_freqs )
+      @uniques = []
+      @freq.each do |tok,f|
+        if sum_freqs[tok] == f
+          @uniques << tok 
+        end
       end
+      @uniques
     end
 
-    def unwanted(tok)
-      @option[:ignore].each do |r|
-        return true if r.match(tok)
+    def report_uniques
+      entries = []
+      @uniques.each do |tok|
+        entries << [@first[tok], tok ]
       end
-      #print tok
-      #print ' '
-      return false
+      entries.sort!
+      # We now have the uniques in line order
+      s = "Only in #{@filename}"
+      puts s
+      puts "-" * s.length
+      entries.each do |line,tok|
+        printf( "%6d: %s (%d)\n", line, tok, @freq[tok] )
+      end
+      puts
     end
+
+
+    def report_interesting
+      # A line is interesting if it is the first line containing a unique token
+      interesting = []
+      @uniques.each do |tok|
+        interesting << @first[tok]
+      end
+      interesting = interesting.sort.uniq.reverse # To allow efficient test
+
+      s = "Interesting lines in #{@filename} (#{interesting.count})"
+      puts s
+      puts "-" * s.length
+
+        f = File.open(@filename,  encoding: 'iso-8859-1')
+        f = Zlib::GzipReader.new(f) if @filename.end_with?('.gz')
+        count = 0
+        f.each_line do |line|
+          count += 1
+          if interesting.empty?
+            break
+          elsif count == interesting.last
+            printf( "%6d:%s", count, line )
+            interesting.pop
+          end
+        end
+        f.close
+        puts
+    end
+
+
 
 
     def name
@@ -96,6 +130,34 @@ module Logcompare
     def first( token )
       @first[token]
     end
+
+    def uniques
+      @uniques
+    end
+
+
+private
+    def parse_line(line)
+      @count += 1
+      line.scan(@option[:token]).each do |w|  
+        next if unwanted(w)
+        w.gsub!(@option[:same], '_' ) 
+        @freq[w] += 1
+        @first[w] = @count unless @first.has_key?(w)
+        @tokens += 1
+      end
+    end
+
+    def unwanted(tok)
+      @option[:ignore].each do |r|
+        return true if r.match(tok)
+      end
+      #print tok
+      #print ' '
+      return false
+    end
+
+
 
 	end
 

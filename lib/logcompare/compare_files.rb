@@ -20,17 +20,15 @@ module Logcompare
           end
         end
 
-        # If a token only occurs in one file, the frequency in that file will be the same as the sum
         analyses.each do |analysis|
-          uniques = []
-          analysis.tokens.each do |tok|
-            if @sum[tok] == analysis.token_freq(tok)
-              uniques << [analysis.first(tok), tok, analysis.token_freq(tok) ]
-            end
-          end
-          report_unqiues( analysis.name, uniques ) if uniques.count > 0
+          analysis.find_uniques( @sum )
         end
 
+        # If a token only occurs in one file, the frequency in that file will be the same as the sum
+        analyses.each do |analysis|
+          analysis.report_uniques if (@option[:uniques] && !analysis.uniques.empty?)
+          analysis.report_interesting
+        end
 
       end
 
