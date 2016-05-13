@@ -19,10 +19,12 @@ module Logcompare
             @sum[tok] += f
           end
         end
+        puts "* Finished first pass"
 
         analyses.each do |analysis|
           analysis.find_uniques( @sum )
         end
+        puts
 
         # If a token only occurs in one file, the frequency in that file will be the same as the sum
         analyses.each do |analysis|

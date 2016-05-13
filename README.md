@@ -4,34 +4,29 @@ Command line gem to compare a set of log files which are presumed to cover simil
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Currentlythe gem is not on [rubygems](http://rubygems.org/)
 
-```ruby
-gem 'logcompare'
-```
 
-And then execute:
+If you have the [specific_install](https://rubygems.org/gems/specific_install/versions/0.3.1) gem installed, you can install it directly from a git repository:
 
-    $ bundle
-
-Or install it yourself as:
-
+    $ gem specific_install -l https://Mike_Bell@bitbucket.org/Mike_Bell/ea2-logcompare.git
     $ gem install logcompare
 
 ## Usage
 
-```
-   $ logcompare log1 log2 log3 ...
-```
+    
+    $ logcompare --help
+    $ logcompare logfile1 logfile2 logfile3 ...
 
+Most of the logfiles should represent "normal" operations. The log files will be analyzed and any "interesting" lines which differ significantly from other log files will be printed out. 
+
+Interestingness is determined by the lexical tokens in the file. What constitutes a token, how it should be normalized, and what tokens should be ignored are controlled by additional options to the program. 
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+It's a Ruby gem with no special requirements. 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/logcompare.
+Bug reports and pull requests are welcome on GitHub at https://github.com/m-z-b/logcompare.
 
