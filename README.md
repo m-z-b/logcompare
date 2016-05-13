@@ -9,7 +9,7 @@ Currently the gem is not on [rubygems](http://rubygems.org/)
 
 If you have the [specific_install](https://rubygems.org/gems/specific_install/versions/0.3.1) gem installed, you can install it directly from a git repository:
 
-    $ gem specific_install -l https://Mike_Bell@bitbucket.org/Mike_Bell/ea2-logcompare.git
+    $ gem specific_install -l https://path-to-git-repo
 
 
 ## Usage
