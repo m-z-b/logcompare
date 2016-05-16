@@ -86,7 +86,7 @@ module Logcompare
       s = "Interesting lines in #{@filename} (#{interesting.count})"
       puts s
       puts "-" * s.length
-
+      unless interesting.empty?
         f = File.open(@filename,  encoding: 'iso-8859-1')
         f = Zlib::GzipReader.new(f) if @filename.end_with?('.gz')
         count = 0
@@ -100,7 +100,10 @@ module Logcompare
           end
         end
         f.close
-        puts
+      else
+        puts " There was nothing of interest in this file."
+      end
+      puts
     end
 
 

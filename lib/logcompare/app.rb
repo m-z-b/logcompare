@@ -26,8 +26,12 @@ module Logcompare
       end
     end
 
-    def print_info
+    def print_version
       puts "Mike's Logcompare V#{VERSION}"
+    end
+
+    def print_info
+      print_version
       puts "Tokens: #{@option[:token]}"
       puts "Same: #{@option[:same]}"
       unless @option[:ignore].empty?
@@ -46,7 +50,7 @@ module Logcompare
         opt.separator ""
         opt.separator "Specific options:"
 
-        opt.on '--help', 'Print usage information' do 
+        opt.on '--help', 'Print usage information and exit' do 
           puts opt
           exit
         end
@@ -97,6 +101,12 @@ module Logcompare
         opt.on '--uniques', 'show list of unique tokens in each file' do |opt|
           @option[:uniques] = true
         end
+
+        opt.on '--version', 'Print version information and exit' do 
+          print_version
+          exit
+        end
+
 
 
       end
